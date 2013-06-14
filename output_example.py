@@ -126,20 +126,18 @@ class DummyTurtleMain(object):
         self.sw = gtk.ScrolledWindow()
         self.sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.sw.show()
-        canvas_ = gtk.DrawingArea()
+        self.canvas = gtk.DrawingArea()
         width = gtk.gdk.screen_width() * 2
         height = gtk.gdk.screen_height() * 2
-        canvas_.set_size_request(width, height)
-        self.sw.add_with_viewport(canvas_)
-        canvas_.show()
+        self.canvas.set_size_request(width, height)
+        self.sw.add_with_viewport(self.canvas)
+        self.canvas.show()
         self.vbox.pack_end(self.sw, True, True)
         self.fixed.put(self.vbox, 0, 0)
         self.fixed.show()
         
-        win.add(self.fixed)
-        win.show_all()
-        self.win = win
-        self.canvas = canvas_
+        self.win.add(self.fixed)
+        self.win.show_all()
         
         
         # TODO how to find out whether we're in interactive mode? are we always in interactive mode?
@@ -147,14 +145,15 @@ class DummyTurtleMain(object):
         
         # copied from turtleblocks.TurtleMain._build_window()
         if interactive:
-            win = self.canvas.get_window()
-            cr = win.cairo_create()
+            gdk_win = self.canvas.get_window()
+            cr = gdk_win.cairo_create()
             surface = cr.get_target()
         else:
             img_surface = cairo.ImageSurface(cairo.FORMAT_RGB24,
                                              1024, 768)
             cr = cairo.Context(img_surface)
             surface = cr.get_target()
+        # TODO what is this?
         self.turtle_canvas = surface.create_similar(
             cairo.CONTENT_COLOR, max(1024, gtk.gdk.screen_width() * 2),
             max(768, gtk.gdk.screen_height() * 2))
@@ -163,6 +162,7 @@ class DummyTurtleMain(object):
         
         # instantiate an instance of a dummy sub-class that supports only 
         # the stuff TurtleGraphics needs
+        # TODO don't hardcode running_sugar
         self.tw = DummyTAWindow(self.canvas, TA_ROOT_PATH,
                                           turtle_canvas=self.turtle_canvas,
                                           parent=self, running_sugar=False)
@@ -189,29 +189,39 @@ class DummyTAWindow(TurtleArtWindow):
     def __init__(self, canvas_window, path, parent=None,
                  mycolors=None, mynick=None, turtle_canvas=None,
                  running_sugar=True):
+        """canvas_window -- a GTK DrawingArea
+        path -- the path to the TA installation
+        parent -- a TurtleMain or DummyTurtleMain object
+        turtle_canvas -- a GDK surface (?)
+        """
+        self.window = canvas_window
+        self.path = path
+        # TODO eliminate duplication (also in original TAWindow code)
         self.parent = parent
-        # TODO what is this?
+        self.activity = parent
         self.turtle_canvas = turtle_canvas
+        # to be potentially overridden below
+        self.running_sugar = False
+
         self._loaded_project = ''
         self._sharing = False
         self._timeout_tag = [0]
         self.send_event = None  # method to send events over the network
         self.gst_available = _GST_AVAILABLE
-        self.running_sugar = False
         self.nick = None
-        self.window = canvas_window
+
         if isinstance(canvas_window, gtk.DrawingArea):
             self.interactive_mode = True
-            #self.window = canvas_window
             self.window.set_flags(gtk.CAN_FOCUS)
             self.window.show_all()
             if running_sugar:
                 self.parent.show_all()
-                #self.running_sugar = True
+                self.running_sugar = True
 
+                # TODO needed?
                 from sugar import profile
-
                 self.nick = profile.get_nick_name()
+
                 self.macros_path = os.path.join(
                     get_path(parent, 'data'), _MACROS_SUBPATH)
             else:
@@ -222,11 +232,8 @@ class DummyTAWindow(TurtleArtWindow):
             self._setup_events()
         else:
             self.interactive_mode = False
-            #self.window = canvas_window
-            self.running_sugar = False
-        self.activity = parent
 
-        self.path = path
+        # loading and saving
         self.load_save_folder = os.path.join(path, 'samples')
         self.py_load_save_folder = os.path.join(path, 'pysamples')
         self._py_cache = {}
@@ -234,6 +241,8 @@ class DummyTAWindow(TurtleArtWindow):
         self.used_block_list = []  # Which blocks has the user used?
         self.save_folder = None
         self.save_file_name = None
+
+        # dimensions
         self.width = gtk.gdk.screen_width()
         self.height = gtk.gdk.screen_height()
         self.rect = gtk.gdk.Rectangle(0, 0, 0, 0)
@@ -256,6 +265,7 @@ class DummyTAWindow(TurtleArtWindow):
         self.sharing_blocks = False
         self.deleting_blocks = False
 
+        # find out which character to use as decimal point
         try:
             locale.setlocale(locale.LC_NUMERIC, '')
         except locale.Error:
@@ -264,8 +274,8 @@ class DummyTAWindow(TurtleArtWindow):
         if self.decimal_point == '' or self.decimal_point is None:
             self.decimal_point = '.'
 
+        # settings that depend on the hardware
         self.orientation = HORIZONTAL_PALETTE
-
         self.hw = get_hardware()
         self.lead = 1.0
         if self.hw in (XO1, XO15, XO175, XO4):
@@ -280,7 +290,7 @@ class DummyTAWindow(TurtleArtWindow):
         else:
             self.scale = 1.0
             self.entry_scale = 1.0
-            self.color_mode = '888'  # TODO: Read visual mode from gtk image
+            self.color_mode = '888'
         self._set_screen_dpi()
 
         self.block_scale = BLOCK_SCALE[3]
@@ -329,6 +339,7 @@ class DummyTAWindow(TurtleArtWindow):
         self.turtle_movement_to_share = None
         self.paste_offset = 20  # Don't paste on top of where you copied.
 
+        # common properties of all blocks (font size, decimal point, ...)
         self.block_list = Blocks(font_scale_factor=self.scale,
                                  decimal_point=self.decimal_point)
         if self.interactive_mode:
@@ -336,6 +347,7 @@ class DummyTAWindow(TurtleArtWindow):
         else:
             self.sprite_list = None
 
+        # canvas object that supports the basic drawing functionality
         self.canvas = TurtleGraphics(self, self.width, self.height)
         if self.hw == XO175 and self.canvas.width == 1024:
             self.hw = XO30
@@ -381,6 +393,8 @@ class DummyTAWindow(TurtleArtWindow):
         self._init_plugins()
         self._setup_plugins()
         self._setup_misc()
+
+        # not needed for Python export
 #         for name in palette_init_on_start:
 #             debug_output('initing palette %s' % (name), self.running_sugar)
 #             self.show_toolbar_palette(palette_names.index(name),
@@ -443,20 +457,21 @@ class DummyTAWindow(TurtleArtWindow):
             self.overlay_shapes[name].hide()
             self.overlay_shapes[name].type = 'overlay'
 
-        if not self.running_sugar:
-            # offset = 2 * self.width - 55 * len(TOOLBAR_SHAPES)
-            offset = 55 * (1 + len(palette_blocks))
-            for i, name in enumerate(TOOLBAR_SHAPES):
-                self.toolbar_shapes[name] = Sprite(
-                    self.sprite_list, i * 55 + offset, 0,
-                    svg_str_to_pixbuf(
-                        svg_from_file(
-                            os.path.join(
-                                self.path, 'icons', '%s.svg' % (name)))))
-                self.toolbar_shapes[name].set_layer(TAB_LAYER)
-                self.toolbar_shapes[name].name = name
-                self.toolbar_shapes[name].type = 'toolbar'
-            self.toolbar_shapes['stopiton'].hide()
+            # not needed for Python export
+#         if not self.running_sugar:
+#             # offset = 2 * self.width - 55 * len(TOOLBAR_SHAPES)
+#             offset = 55 * (1 + len(palette_blocks))
+#             for i, name in enumerate(TOOLBAR_SHAPES):
+#                 self.toolbar_shapes[name] = Sprite(
+#                     self.sprite_list, i * 55 + offset, 0,
+#                     svg_str_to_pixbuf(
+#                         svg_from_file(
+#                             os.path.join(
+#                                 self.path, 'icons', '%s.svg' % (name)))))
+#                 self.toolbar_shapes[name].set_layer(TAB_LAYER)
+#                 self.toolbar_shapes[name].name = name
+#                 self.toolbar_shapes[name].type = 'toolbar'
+#             self.toolbar_shapes['stopiton'].hide()
 
 
 
@@ -464,6 +479,7 @@ class DummyTAWindow(TurtleArtWindow):
 
 win = gtk.Window(gtk.WINDOW_TOPLEVEL)
 gui = DummyTurtleMain(win=win)
+# TODO re-enable this code (after giving gui the right attributes)
 # win.set_default_size(gui.width, gui.height)
 # win.move(gui.x, gui.y)
 win.maximize()
@@ -478,8 +494,9 @@ canvas = gui.tw.canvas
 
 
 
-# auto-converted block code (assuming it had a 'start' block at the top)
 def start():
+    """auto-converted block code (the one that had a 'start' block at the top)
+    """
     # example: draw a square
     for i in range(4):
         canvas.forward(100)
@@ -489,10 +506,30 @@ def start():
     # executed in TA. That is, translate all blocks to operations on the canvas 
     # or Python control structures (e.g., loops).
 
+def foo():
+    """other auto-converted stack of blocks (named 'foo')
+    """
+    # TODO invent some sample code
+    pass
+
+def unnamed_stack_1():
+    """other auto-converted stack of blocks (unnamed)
+    """
+    # TODO invent some sample code
+    pass
+
+def main():
+    """Call either the start() function if there is one, or all unnamed 
+    stacks.
+    """
+    start()
+
 
 
 if __name__ == '__main__':
+    # TODO make main() be executed during the GTK main loop to successively draw the square
+    # TODO make the turtle move at the same pace as in TA
+    main()
     gtk.main()
-    start()
 
 
