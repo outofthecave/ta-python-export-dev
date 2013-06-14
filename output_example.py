@@ -9,8 +9,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
-import pango
-import pangocairo
 
 from gettext import gettext as _
 
@@ -42,27 +40,10 @@ from TurtleArt.taconstants import (HORIZONTAL_PALETTE, VERTICAL_PALETTE, BLOCK_S
                          EXPANDABLE_ARGS, XO1, XO15, XO175, XO30, XO4, TITLEXY,
                          CONTENT_ARGS, CONSTANTS, EXPAND_SKIN, PROTO_LAYER,
                          EXPANDABLE_FLOW, SUFFIX)
-from TurtleArt.tapalette import (palette_names, palette_blocks, expandable_blocks,
-                       block_names, content_blocks, default_values,
-                       special_names, block_styles, help_strings,
-                       hidden_proto_blocks, string_or_number_args,
-                       make_palette, palette_name_to_index,
-                       palette_init_on_start)
 from TurtleArt.talogo import (LogoCode, primitive_dictionary, logoerror)
 from TurtleArt.tacanvas import TurtleGraphics
 from TurtleArt.tablock import (Blocks, Block)
 from TurtleArt.taturtle import (Turtles, Turtle)
-# from TurtleArt.tautils import (magnitude, get_load_name, get_save_name, data_from_file,
-#                      data_to_file, round_int, get_id, get_pixbuf_from_journal,
-#                      movie_media_type, audio_media_type, image_media_type,
-#                      save_picture, calc_image_size, get_path, hide_button_hit,
-#                      show_button_hit, chooser_dialog, arithmetic_check, xy,
-#                      find_block_to_run, find_top_block, journal_check,
-#                      find_group, find_blk_below, data_to_string,
-#                      find_start_stack, get_hardware, debug_output,
-#                      error_output, convert, find_hat, find_bot_block,
-#                      restore_clamp, collapse_clamp, data_from_string,
-#                      increment_name, get_screen_dpi)
 from TurtleArt.tautils import (magnitude, get_load_name, get_save_name, data_from_file,
                      data_to_file, round_int, get_id, get_pixbuf_from_journal,
                      movie_media_type, audio_media_type, image_media_type,
@@ -80,14 +61,7 @@ from TurtleArt.sprites import (Sprites, Sprite)
 if _GST_AVAILABLE:
     from TurtleArt.tagplay import stop_media
 
-_MOTION_THRESHOLD = 6
-_SNAP_THRESHOLD = 200
-_NO_DOCK = (100, 100)  # Blocks cannot be docked
-_BUTTON_SIZE = 32
-_MARGIN = 5
-_UNFULLSCREEN_VISIBILITY_TIMEOUT = 2
 _PLUGIN_SUBPATH = 'plugins'
-_MACROS_SUBPATH = 'macros'
 
 
 import cairo
@@ -153,7 +127,6 @@ class DummyTurtleMain(object):
                                              1024, 768)
             cr = cairo.Context(img_surface)
             surface = cr.get_target()
-        # TODO what is this?
         self.turtle_canvas = surface.create_similar(
             cairo.CONTENT_COLOR, max(1024, gtk.gdk.screen_width() * 2),
             max(768, gtk.gdk.screen_height() * 2))
@@ -221,14 +194,6 @@ class DummyTAWindow(TurtleArtWindow):
                 # TODO needed?
                 from sugar import profile
                 self.nick = profile.get_nick_name()
-
-                self.macros_path = os.path.join(
-                    get_path(parent, 'data'), _MACROS_SUBPATH)
-            else:
-                # Make sure macros_path is somewhere writable
-                self.macros_path = os.path.join(
-                    os.path.expanduser('~'), 'Activities',
-                    'TurtleArt.activity', _MACROS_SUBPATH)
             self._setup_events()
         else:
             self.interactive_mode = False
@@ -527,8 +492,6 @@ def main():
 
 
 if __name__ == '__main__':
-    # TODO make main() be executed during the GTK main loop to successively draw the square
-    # TODO make the turtle move at the same pace as in TA
     main()
     gtk.main()
 
