@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# TODO how to find out this path automatically?
+# path to the toplevel directory of the TA installation
+TA_ROOT_PATH = "../turtleart"
+
 # TODO remove unused imports and global variables
 import pygtk
 pygtk.require('2.0')
@@ -93,12 +97,20 @@ import cairo
 #from TurtleArt.tacanvas import TurtleGraphics
 from TurtleArt.tawindow import TurtleArtWindow
 
-# TODO find meaningful class name
-class Whatever(object):
+
+
+class DummyTurtleMain(object):
+    """Keep the main objects for running a dummy TA window in one place.
+    (Try not to have to inherit from turtleblocks.TurtleMain.)
+    """
     
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             self.__dict__[k] = v
+    
+    def set_title(self, *args, **kwargs):
+        # TODO don't just rely on the 'win' attribute to be present
+        self.win.set_title(*args, **kwargs)
 
 
 
@@ -298,6 +310,7 @@ class DummyTAWindow(TurtleArtWindow):
             self._init_plugins()
             self._setup_plugins()
     
+    # TODO refactor TAWindow to make these methods inheritable
     def _lazy_init(self):
         self._init_plugins()
         self._setup_plugins()
@@ -399,7 +412,7 @@ add a Fixed container in order to position text Entry widgets
 on top of string and number blocks.'''
 # TODO get rid of fixed container
 
-gui = Whatever()
+gui = DummyTurtleMain()
 gui.fixed = gtk.Fixed()
 gui.fixed.connect('size-allocate', lambda widget, rect: gui.vbox.set_size_request(rect[2], rect[3]))
 width = gtk.gdk.screen_width() - 80
@@ -450,12 +463,9 @@ gui.turtle_canvas = surface.create_similar(
 # instantiate either a real TurtleArtWindow instance 
 # or an instance of a dummy sub-class that supports only the stuff 
 # TurtleGraphics needs
-window = DummyTAWindow(gui.canvas, ".",
+window = DummyTAWindow(gui.canvas, TA_ROOT_PATH,
                                   turtle_canvas=gui.turtle_canvas,
                                   parent=gui, running_sugar=False)
-
-# setup the canvas to draw on - TODO but TurtleArtWindow constructor already instantiates one
-#canvas = TurtleGraphics(window, gtk.gdk.screen_width(), gtk.gdk.screen_height())
 canvas = window.canvas
 
 
