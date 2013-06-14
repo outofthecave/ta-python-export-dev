@@ -104,13 +104,79 @@ class DummyTurtleMain(object):
     (Try not to have to inherit from turtleblocks.TurtleMain.)
     """
     
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            self.__dict__[k] = v
-    
-    def set_title(self, *args, **kwargs):
-        # TODO don't just rely on the 'win' attribute to be present
-        self.win.set_title(*args, **kwargs)
+    def __init__(self, win):
+        """Create a scrolled window to contain the turtle canvas.
+        win -- a GTK toplevel window
+        """
+        self.win = win
+        self.set_title = self.win.set_title
+
+        # TODO get rid of fixed container?
+        
+        self.fixed = gtk.Fixed()
+        self.fixed.connect('size-allocate', (lambda widget, rect: 
+                self.vbox.set_size_request(rect[2], rect[3])))
+        width = gtk.gdk.screen_width() - 80
+        height = gtk.gdk.screen_height() - 80
+        self.fixed.set_size_request(width, height)
+        
+        self.vbox = gtk.VBox(False, 0)
+        self.vbox.show()
+        
+        self.sw = gtk.ScrolledWindow()
+        self.sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.sw.show()
+        canvas_ = gtk.DrawingArea()
+        width = gtk.gdk.screen_width() * 2
+        height = gtk.gdk.screen_height() * 2
+        canvas_.set_size_request(width, height)
+        self.sw.add_with_viewport(canvas_)
+        canvas_.show()
+        self.vbox.pack_end(self.sw, True, True)
+        self.fixed.put(self.vbox, 0, 0)
+        self.fixed.show()
+        
+        win.add(self.fixed)
+        win.show_all()
+        self.win = win
+        self.canvas = canvas_
+        
+        
+        # TODO how to find out whether we're in interactive mode? are we always in interactive mode?
+        interactive = True
+        
+        # copied from turtleblocks.TurtleMain._build_window()
+        if interactive:
+            win = self.canvas.get_window()
+            cr = win.cairo_create()
+            surface = cr.get_target()
+        else:
+            img_surface = cairo.ImageSurface(cairo.FORMAT_RGB24,
+                                             1024, 768)
+            cr = cairo.Context(img_surface)
+            surface = cr.get_target()
+        self.turtle_canvas = surface.create_similar(
+            cairo.CONTENT_COLOR, max(1024, gtk.gdk.screen_width() * 2),
+            max(768, gtk.gdk.screen_height() * 2))
+        
+        
+        
+        # instantiate an instance of a dummy sub-class that supports only 
+        # the stuff TurtleGraphics needs
+        self.tw = DummyTAWindow(self.canvas, TA_ROOT_PATH,
+                                          turtle_canvas=self.turtle_canvas,
+                                          parent=self, running_sugar=False)
+
+
+    def _quit_ta(self, widget=None, e=None):
+        """Quit all plugins and the main window. No need to prompt the user 
+        to save their work, since they cannot change anything.
+        """
+        for plugin in self.tw.turtleart_plugins:
+            if hasattr(plugin, 'quit'):
+                plugin.quit()
+        gtk.main_quit()
+        exit()
 
 
 
@@ -397,6 +463,7 @@ class DummyTAWindow(TurtleArtWindow):
 # copied from turtleblocks.TurtleMain._setup_gtk()
 
 win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+gui = DummyTurtleMain(win=win)
 # win.set_default_size(gui.width, gui.height)
 # win.move(gui.x, gui.y)
 win.maximize()
@@ -405,68 +472,9 @@ win.maximize()
 #     win.set_icon_from_file(os.path.join(gui._execdirname,
 #                                         gui._ICON_SUBPATH))
 win.show()
-# win.connect('delete_event', gui._quit_ta)
+win.connect('delete_event', gui._quit_ta)
 
-''' Create a scrolled window to contain the turtle canvas. We
-add a Fixed container in order to position text Entry widgets
-on top of string and number blocks.'''
-# TODO get rid of fixed container
-
-gui = DummyTurtleMain()
-gui.fixed = gtk.Fixed()
-gui.fixed.connect('size-allocate', lambda widget, rect: gui.vbox.set_size_request(rect[2], rect[3]))
-width = gtk.gdk.screen_width() - 80
-height = gtk.gdk.screen_height() - 80
-gui.fixed.set_size_request(width, height)
-
-gui.vbox = gtk.VBox(False, 0)
-gui.vbox.show()
-
-gui.sw = gtk.ScrolledWindow()
-gui.sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-gui.sw.show()
-canvas_ = gtk.DrawingArea()
-width = gtk.gdk.screen_width() * 2
-height = gtk.gdk.screen_height() * 2
-canvas_.set_size_request(width, height)
-gui.sw.add_with_viewport(canvas_)
-canvas_.show()
-gui.vbox.pack_end(gui.sw, True, True)
-gui.fixed.put(gui.vbox, 0, 0)
-gui.fixed.show()
-
-win.add(gui.fixed)
-win.show_all()
-gui.win = win
-gui.canvas = canvas_
-
-
-# TODO how to find out whether we're in interactive mode? are we always in interactive mode?
-interactive = True
-
-# copied from turtleblocks.TurtleMain._build_window()
-if interactive:
-    win = gui.canvas.get_window()
-    cr = win.cairo_create()
-    surface = cr.get_target()
-else:
-    img_surface = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                                     1024, 768)
-    cr = cairo.Context(img_surface)
-    surface = cr.get_target()
-gui.turtle_canvas = surface.create_similar(
-    cairo.CONTENT_COLOR, max(1024, gtk.gdk.screen_width() * 2),
-    max(768, gtk.gdk.screen_height() * 2))
-
-
-
-# instantiate either a real TurtleArtWindow instance 
-# or an instance of a dummy sub-class that supports only the stuff 
-# TurtleGraphics needs
-window = DummyTAWindow(gui.canvas, TA_ROOT_PATH,
-                                  turtle_canvas=gui.turtle_canvas,
-                                  parent=gui, running_sugar=False)
-canvas = window.canvas
+canvas = gui.tw.canvas
 
 
 
