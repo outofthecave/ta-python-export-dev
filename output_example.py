@@ -84,19 +84,10 @@ class DummyTurtleMain(object):
         """
         self.win = win
         self.set_title = self.win.set_title
-
-        # TODO get rid of fixed container?
         
-        self.fixed = gtk.Fixed()
-        self.fixed.connect('size-allocate', (lambda widget, rect: 
-                self.vbox.set_size_request(rect[2], rect[3])))
-        width = gtk.gdk.screen_width() - 80
-        height = gtk.gdk.screen_height() - 80
-        self.fixed.set_size_request(width, height)
-        
+        # setup a scrolled container for the canvas
         self.vbox = gtk.VBox(False, 0)
         self.vbox.show()
-        
         self.sw = gtk.ScrolledWindow()
         self.sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.sw.show()
@@ -107,10 +98,7 @@ class DummyTurtleMain(object):
         self.sw.add_with_viewport(self.canvas)
         self.canvas.show()
         self.vbox.pack_end(self.sw, True, True)
-        self.fixed.put(self.vbox, 0, 0)
-        self.fixed.show()
-        
-        self.win.add(self.fixed)
+        self.win.add(self.vbox)
         self.win.show_all()
         
         
