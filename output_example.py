@@ -346,31 +346,10 @@ class DummyTAWindow(TurtleArtWindow):
         #self._basic_palettes = Palettes(self)
 
         if self.interactive_mode:
-            gobject.idle_add(self._lazy_init)
+            gobject.idle_add(self._lazy_init, False)
         else:
             self._init_plugins()
             self._setup_plugins()
-    
-    def _lazy_init(self):
-        # TODO add a parameter to control whether the commented code will be executed
-        self._init_plugins()
-        self._setup_plugins()
-        self._setup_misc()
-
-        # not needed for Python export
-#         for name in palette_init_on_start:
-#             debug_output('initing palette %s' % (name), self.running_sugar)
-#             self.show_toolbar_palette(palette_names.index(name),
-#                                       init_only=False, regenerate=True,
-#                                       show=False)
-# 
-#         self._basic_palettes.make_trash_palette()
-# 
-#         self.show_toolbar_palette(0, init_only=False, regenerate=True,
-#                                   show=True)
-
-        if self.running_sugar:
-            self.activity.check_buttons_for_fit()
 
     def _setup_misc(self):
         ''' Misc. sprites for status, overlays, etc. '''
