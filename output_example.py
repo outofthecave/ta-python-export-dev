@@ -346,56 +346,10 @@ class DummyTAWindow(TurtleArtWindow):
         #self._basic_palettes = Palettes(self)
 
         if self.interactive_mode:
-            gobject.idle_add(self._lazy_init, False)
+            gobject.idle_add(self._lazy_init, False, False)
         else:
             self._init_plugins()
             self._setup_plugins()
-
-    def _setup_misc(self):
-        ''' Misc. sprites for status, overlays, etc. '''
-        # TODO add a parameter to control whether the commented code will be executed
-        self.load_media_shapes()
-        for i, name in enumerate(STATUS_SHAPES):
-            # Temporary hack to use wider shapes
-            if name in ['print', 'help', 'status'] and self.width > 1024:
-                self.status_shapes[name] = svg_str_to_pixbuf(
-                    svg_from_file(
-                        os.path.join(self.path, 'images', name + '1200.svg')))
-            else:
-                self.status_shapes[name] = svg_str_to_pixbuf(
-                    svg_from_file(
-                        os.path.join(self.path, 'images', name + '.svg')))
-        self.status_spr = Sprite(self.sprite_list, 0, self.height - 200,
-                                 self.status_shapes['status'])
-        self.status_spr.hide()
-        self.status_spr.type = 'status'
-        self._autohide_shape = True
-
-        for name in OVERLAY_SHAPES:
-            self.overlay_shapes[name] = Sprite(
-                self.sprite_list,
-                int(self.width / 2 - 600),
-                int(self.height / 2 - 450),
-                svg_str_to_pixbuf(
-                    svg_from_file("%s/images/%s.svg" % (self.path, name))))
-            self.overlay_shapes[name].hide()
-            self.overlay_shapes[name].type = 'overlay'
-
-            # not needed for Python export
-#         if not self.running_sugar:
-#             # offset = 2 * self.width - 55 * len(TOOLBAR_SHAPES)
-#             offset = 55 * (1 + len(palette_blocks))
-#             for i, name in enumerate(TOOLBAR_SHAPES):
-#                 self.toolbar_shapes[name] = Sprite(
-#                     self.sprite_list, i * 55 + offset, 0,
-#                     svg_str_to_pixbuf(
-#                         svg_from_file(
-#                             os.path.join(
-#                                 self.path, 'icons', '%s.svg' % (name)))))
-#                 self.toolbar_shapes[name].set_layer(TAB_LAYER)
-#                 self.toolbar_shapes[name].name = name
-#                 self.toolbar_shapes[name].type = 'toolbar'
-#             self.toolbar_shapes['stopiton'].hide()
 
 
 
