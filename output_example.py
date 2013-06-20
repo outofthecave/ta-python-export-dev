@@ -3,6 +3,7 @@
 # TODO how to find out this path automatically?
 # path to the toplevel directory of the TA installation
 TA_ROOT_PATH = "../turtleart"
+#print "PYTHONPATH =", os.environ["PYTHONPATH"]
 
 # TODO remove unused imports and global variables
 import pygtk
@@ -62,6 +63,7 @@ if _GST_AVAILABLE:
     from TurtleArt.tagplay import stop_media
 
 _PLUGIN_SUBPATH = 'plugins'
+_MACROS_SUBPATH = 'macros'
 
 
 import cairo
@@ -182,6 +184,14 @@ class DummyTAWindow(TurtleArtWindow):
                 # TODO needed?
                 from sugar import profile
                 self.nick = profile.get_nick_name()
+
+                self.macros_path = os.path.join(
+                    get_path(parent, 'data'), _MACROS_SUBPATH)
+            else:
+                # Make sure macros_path is somewhere writable
+                self.macros_path = os.path.join(
+                    os.path.expanduser('~'), 'Activities',
+                    'TurtleArt.activity', _MACROS_SUBPATH)
             self._setup_events()
         else:
             self.interactive_mode = False
@@ -341,8 +351,8 @@ class DummyTAWindow(TurtleArtWindow):
             self._init_plugins()
             self._setup_plugins()
     
-    # TODO refactor TAWindow to make these methods inheritable
     def _lazy_init(self):
+        # TODO add a parameter to control whether the commented code will be executed
         self._init_plugins()
         self._setup_plugins()
         self._setup_misc()
@@ -362,27 +372,9 @@ class DummyTAWindow(TurtleArtWindow):
         if self.running_sugar:
             self.activity.check_buttons_for_fit()
 
-    def _init_plugins(self):
-        ''' Try importing plugin files from the plugin dir. '''
-        plist = self._get_plugins_from_plugins_dir(self._get_plugin_home())
-        for plugin_dir in plist:
-            self.init_plugin(plugin_dir)
-
-    def _get_plugin_home(self):
-        ''' Look in the execution directory '''
-        path = os.path.join(self.path, _PLUGIN_SUBPATH)
-        if os.path.exists(path):
-            return path
-        else:
-            return None
-
-    def _setup_plugins(self):
-        ''' Initial setup -- called just once. '''
-        for plugin in self.turtleart_plugins:
-            plugin.setup()
-
     def _setup_misc(self):
         ''' Misc. sprites for status, overlays, etc. '''
+        # TODO add a parameter to control whether the commented code will be executed
         self.load_media_shapes()
         for i, name in enumerate(STATUS_SHAPES):
             # Temporary hack to use wider shapes
