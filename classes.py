@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 
-# TODO how to find out this path automatically?
-# path to the toplevel directory of the TA installation
-TA_ROOT_PATH = "../turtleart"
-#print "PYTHONPATH =", os.environ["PYTHONPATH"]
-
 # TODO remove unused imports and global variables
 import pygtk
 pygtk.require('2.0')
@@ -62,13 +57,37 @@ from TurtleArt.sprites import (Sprites, Sprite)
 if _GST_AVAILABLE:
     from TurtleArt.tagplay import stop_media
 
-_PLUGIN_SUBPATH = 'plugins'
-_MACROS_SUBPATH = 'macros'
-
-
 import cairo
 
 from TurtleArt.tawindow import TurtleArtWindow
+
+
+# path to the toplevel directory of the TA installation
+_TA_INSTALLATION_PATH = None
+# search the PYTHONPATH for a dir containing TurtleArt/tawindow.py
+PYTHONPATH = os.environ["PYTHONPATH"]
+for path in PYTHONPATH.split(":"):
+    try:
+        entries = os.listdir(path)
+    except OSError:
+        continue
+    if "TurtleArt" in entries:
+        new_path = os.path.join(path, "TurtleArt")
+        try:
+            new_entries = os.listdir(new_path)
+        except OSError:
+            continue
+        if "tawindow.py" in new_entries:
+            _TA_INSTALLATION_PATH = path
+            break
+# if the TA installation path was not found, notify the user and refuse to run
+if _TA_INSTALLATION_PATH is None:
+    print _("The path to the TurtleArt installation must be listed in the "
+            "environment variable PYTHONPATH.")
+    exit(1)
+
+_PLUGIN_SUBPATH = 'plugins'
+_MACROS_SUBPATH = 'macros'
 
 
 
@@ -122,7 +141,7 @@ class DummyTurtleMain(object):
         # instantiate an instance of a dummy sub-class that supports only 
         # the stuff TurtleGraphics needs
         # TODO don't hardcode running_sugar
-        self.tw = DummyTAWindow(self.canvas, TA_ROOT_PATH,
+        self.tw = DummyTAWindow(self.canvas, _TA_INSTALLATION_PATH,
                                           turtle_canvas=self.turtle_canvas,
                                           parent=self, running_sugar=False)
 
