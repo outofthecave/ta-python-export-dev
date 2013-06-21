@@ -136,13 +136,9 @@ def action_2():
     canvas.forward(-box_1)
 
 
-def main():
-    start()
-
-
 
 if __name__ == '__main__':
-    main()
+    start()
     gtk.main()
 
 
