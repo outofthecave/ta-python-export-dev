@@ -18,6 +18,7 @@ except ImportError:
 import os
 import subprocess
 import errno
+from sys import argv
 
 from random import uniform
 from math import atan2, pi
@@ -96,7 +97,7 @@ class DummyTurtleMain(object):
     (Try not to have to inherit from turtleblocks.TurtleMain.)
     """
     
-    def __init__(self, win):
+    def __init__(self, win, name="exported project"):
         """Create a scrolled window to contain the turtle canvas.
         win -- a GTK toplevel window
         """
@@ -144,6 +145,8 @@ class DummyTurtleMain(object):
         self.tw = DummyTAWindow(self.canvas, _TA_INSTALLATION_PATH,
                                           turtle_canvas=self.turtle_canvas,
                                           parent=self, running_sugar=False)
+        
+        self.name = name
 
 
     def _quit_ta(self, widget=None, e=None):
@@ -376,7 +379,7 @@ def get_canvas():
     # copied from turtleblocks.TurtleMain._setup_gtk()
     
     win = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    gui = DummyTurtleMain(win=win)
+    gui = DummyTurtleMain(win=win, name=argv[0])
     # TODO re-enable this code (after giving gui the right attributes)
     # win.set_default_size(gui.width, gui.height)
     # win.move(gui.x, gui.y)
