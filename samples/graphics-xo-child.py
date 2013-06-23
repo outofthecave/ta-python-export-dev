@@ -7,13 +7,14 @@ from classes import *
 
 canvas = get_canvas()
 
+BOX = {}
+ACTION = {}
+
 
 
 def start():
     """action stack called 'start'
     """
-    global box_1, box2
-    
     # clean
     # copied from talogo.LogoCode.prim_clear
     # TODO find a way to clear the plugins without accessing gui.tw
@@ -42,14 +43,13 @@ def start():
         canvas.setpen(True)
         
         # action ="xo man"
-        xo_man()
+        ACTION["xo man"]()
+ACTION["start"] = start
 
 
 def xo_man():
     """action stack called 'xo man'
     """
-    global box_1, box2
-    
     # set color =(random min=0 max=100)
     canvas.setcolor(random.uniform(0, 100))
     
@@ -57,7 +57,7 @@ def xo_man():
     canvas.setpensize(40)
     
     # action ="xo"
-    xo()
+    ACTION["xo"]()
     
     # set color =(+ =color =10)
     canvas.setcolor(canvas.color + 10)
@@ -66,14 +66,13 @@ def xo_man():
     canvas.setpensize(canvas.pensize - 25)
     
     # action ="xo"
-    xo()
+    ACTION["xo"]()
+ACTION["xo man"] = xo_man
 
 
 def xo():
     """action stack called 'xo'
     """
-    global box_1, box2
-    
     # left =45
     canvas.right(-45)
     
@@ -118,6 +117,7 @@ def xo():
     
     # set pen size =(- =(pen size) =35)
     canvas.setpensize(canvas.pensize - 35)
+ACTION["xo"] = xo
 
 
 

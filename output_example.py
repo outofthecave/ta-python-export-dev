@@ -5,6 +5,9 @@ from classes import *
 
 canvas = get_canvas()
 
+BOX = {}
+ACTION = {}
+
 
 
 def start():
@@ -18,6 +21,7 @@ def start():
     # The idea is to handle everything as it is handled when the block code is 
     # executed in TA. That is, translate all blocks to operations on the canvas 
     # or Python control structures (e.g., loops).
+ACTION["start"] = start
 
 
 def foo():
@@ -25,6 +29,7 @@ def foo():
     """
     # some code ...
     pass
+ACTION["foo"] = foo
 
 
 def unnamed_stack_1():
