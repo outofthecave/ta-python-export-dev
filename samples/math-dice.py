@@ -8,7 +8,7 @@ from TurtleArt.taconstants import DEFAULT_SCALE
 from classes import *
 
 
-canvas = get_canvas()
+tw = get_tw()
 
 BOX = {}
 ACTION = {}
@@ -66,11 +66,14 @@ ACTION["toss dice"] = toss_dice
 def plot_results():
     """action stack called 'plot results'
     """
+    turtle = tw.turtles.get_active_turtle()
+    canvas = tw.canvas
+
     # clean
     canvas.clearscreen()
     
     # set shade =25
-    canvas.setshade(25)
+    turtle.set_shade(25)
     
     # store in box="box" value=2
     BOX["box"] = 2
@@ -79,65 +82,65 @@ def plot_results():
     for i in range(11):
         
         # pen up
-        canvas.setpen(False)
+        turtle.set_pen_state(False)
         
         # setxy x=(* =50 =(- =(box ="box") =6)) y=0
-        canvas.setxy(50 * (BOX["box"] - 6), 0)
+        turtle.set_xy((50 * (BOX["box"] - 6), 0), pendown=False)
         
         # back =50
-        canvas.forward(-50)
+        turtle.forward(-50)
         
         # show =(box ="box")
         # TODO implement properly
-        x = int(canvas.width / 2) + int(canvas.xcor)
-        y = int(canvas.height / 2) - int(canvas.ycor)
+        x = int(canvas.width / 2) + int(turtle.get_x())
+        y = int(canvas.height / 2) - int(turtle.get_y())
         y -= canvas.textsize
-        canvas.draw_text(str(BOX["box"]), x, y,
+        turtle.draw_text(str(BOX["box"]), x, y,
                          int(canvas.textsize *
                              DEFAULT_SCALE / 100.),
                          canvas.width - x)
         
         # forward =50
-        canvas.forward(50)
+        turtle.forward(50)
         
         # pen down
-        canvas.setpen(True)
+        turtle.set_pen_state(True)
         
         # set color =(* =(box ="box") =10)
-        canvas.setcolor(BOX["box"] * 10)
+        turtle.set_color(BOX["box"] * 10)
         
         # start fill
-        canvas.start_fill()
+        turtle.start_fill()
         
         # repeat =2
         for j in range(2):
             
             # forward =(box =(box ="box"))
-            canvas.forward(BOX[BOX["box"]])
+            turtle.forward(BOX[BOX["box"]])
             
             # right =90
-            canvas.right(90)
+            turtle.right(90)
             
             # forward =40
-            canvas.forward(40)
+            turtle.forward(40)
             
             # right =90
-            canvas.right(90)
+            turtle.right(90)
         
         # end fill
-        canvas.stop_fill()
+        turtle.stop_fill()
         
         # store in box="box" value=(+ =(box ="box") =1)
         BOX["box"] = BOX["box"] + 1
     
     # pen up
-    canvas.setpen(False)
+    turtle.set_pen_state(False)
     
     # setxy x=0 y=-50
-    canvas.setxy(0, -50)
+    turtle.set_xy((0, -50), pendown=False)
     
     # pen down
-    canvas.setpen(True)
+    turtle.set_pen_state(True)
 ACTION["plot results"] = plot_results
 
 
