@@ -5,7 +5,7 @@ import random
 # TODO avoid this
 from TurtleArt.taconstants import DEFAULT_SCALE
 
-from classes import *
+from window_setup import *
 
 
 canvas = get_canvas()
