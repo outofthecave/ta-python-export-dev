@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from classes import *
+from window_setup import *
 
 
 canvas = get_canvas()
