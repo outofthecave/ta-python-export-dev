@@ -5,7 +5,7 @@ import random
 from classes import *
 
 
-canvas = get_canvas()
+tw = get_tw()
 
 BOX = {}
 ACTION = {}
@@ -15,6 +15,9 @@ ACTION = {}
 def start():
     """action stack called 'start'
     """
+    turtle = tw.turtles.get_active_turtle()
+    canvas = tw.canvas
+
     # clean
     # copied from talogo.LogoCode.prim_clear
     # TODO find a way to clear the plugins without accessing gui.tw
@@ -31,16 +34,17 @@ def start():
     for i in range(500):
         
         # pen up
-        canvas.setpen(False)
+        turtle.set_pen_state(False)
         
         # setxy =(random min=left max=right) =(random min=bottom max=top)
-        canvas.setxy(random.uniform(CONSTANTS['leftpos'], 
-                                    CONSTANTS['rightpos']), 
-                     random.uniform(CONSTANTS['bottompos'], 
-                                    CONSTANTS['toppos']))
+        turtle.set_xy((random.uniform(CONSTANTS['leftpos'], 
+                                      CONSTANTS['rightpos']), 
+                       random.uniform(CONSTANTS['bottompos'], 
+                                      CONSTANTS['toppos'])), 
+                      pendown=False)
         
         # pen down
-        canvas.setpen(True)
+        turtle.set_pen_state(True)
         
         # action ="xo man"
         ACTION["xo man"]()
@@ -50,20 +54,22 @@ ACTION["start"] = start
 def xo_man():
     """action stack called 'xo man'
     """
+    turtle = tw.turtles.get_active_turtle()
+
     # set color =(random min=0 max=100)
-    canvas.setcolor(random.uniform(0, 100))
+    turtle.set_color(random.uniform(0, 100))
     
     # set pen size =40
-    canvas.setpensize(40)
+    turtle.set_pen_size(40)
     
     # action ="xo"
     ACTION["xo"]()
     
     # set color =(+ =color =10)
-    canvas.setcolor(canvas.color + 10)
+    turtle.set_color(turtle.get_color() + 10)
     
     # set pen size =(- =(pen size) =25)
-    canvas.setpensize(canvas.pensize - 25)
+    turtle.set_pen_size(turtle.get_pen_size() - 25)
     
     # action ="xo"
     ACTION["xo"]()
@@ -73,50 +79,52 @@ ACTION["xo man"] = xo_man
 def xo():
     """action stack called 'xo'
     """
+    turtle = tw.turtles.get_active_turtle()
+
     # left =45
-    canvas.right(-45)
+    turtle.right(-45)
     
     # repeat =4
     for i in range(4):
 
         # forward =75
-        canvas.forward(75)
+        turtle.forward(75)
         
         # back =75
-        canvas.forward(-75)
+        turtle.forward(-75)
         
         # left =90
-        canvas.right(-90)
+        turtle.right(-90)
         
     # right =45
-    canvas.right(45)
+    turtle.right(45)
     
     # pen up
-    canvas.setpen(False)
+    turtle.set_pen_state(False)
     
     # forward =90
-    canvas.forward(90)
+    turtle.forward(90)
     
     # pen down
-    canvas.setpen(True)
+    turtle.set_pen_state(True)
     
     # set pen size =(+ =(pen size) =35)
-    canvas.setpensize(canvas.pensize + 35)
+    turtle.set_pen_size(turtle.get_pen_size() + 35)
     
     # forward =1
-    canvas.forward(1)
+    turtle.forward(1)
     
     # pen up
-    canvas.setpen(False)
+    turtle.set_pen_state(False)
     
     # back =91
-    canvas.forward(-91)
+    turtle.forward(-91)
     
     # pen down
-    canvas.setpen(True)
+    turtle.set_pen_state(True)
     
     # set pen size =(- =(pen size) =35)
-    canvas.setpensize(canvas.pensize - 35)
+    turtle.set_pen_size(turtle.get_pen_size() - 35)
 ACTION["xo"] = xo
 
 
