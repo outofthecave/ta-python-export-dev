@@ -142,9 +142,11 @@ class DummyTurtleMain(object):
         # instantiate an instance of a dummy sub-class that supports only 
         # the stuff TurtleGraphics needs
         # TODO don't hardcode running_sugar
-        self.tw = DummyTAWindow(self.canvas, _TA_INSTALLATION_PATH,
-                                          turtle_canvas=self.turtle_canvas,
-                                          parent=self, running_sugar=False)
+        self.tw = TurtleArtWindow(self.canvas, _TA_INSTALLATION_PATH,
+                                  turtle_canvas=self.turtle_canvas,
+                                  parent=self, running_sugar=False, 
+                                  init_palettes=False, 
+                                  load_toolbar_shapes=False)
         
         self.name = name
 
@@ -161,220 +163,9 @@ class DummyTurtleMain(object):
 
 
 
-class DummyTAWindow(TurtleArtWindow):
-    """TurtleArtWindow without menus or palettes. Supports only the 
-    functionality that is essential for running the generated Python 
-    code.
-    """
-
-    def __init__(self, canvas_window, path, parent=None,
-                 mycolors=None, mynick=None, turtle_canvas=None,
-                 running_sugar=True):
-        """canvas_window -- a GTK DrawingArea
-        path -- the path to the TA installation
-        parent -- a TurtleMain or DummyTurtleMain object
-        turtle_canvas -- a GDK surface (?)
-        """
-        self.window = canvas_window
-        self.path = path
-        # TODO eliminate duplication (also in original TAWindow code)
-        self.parent = parent
-        self.activity = parent
-        self.turtle_canvas = turtle_canvas
-        # to be potentially overridden below
-        self.running_sugar = False
-
-        self._loaded_project = ''
-        self._sharing = False
-        self._timeout_tag = [0]
-        self.send_event = None  # method to send events over the network
-        self.gst_available = _GST_AVAILABLE
-        self.nick = None
-
-        if isinstance(canvas_window, gtk.DrawingArea):
-            self.interactive_mode = True
-            self.window.set_flags(gtk.CAN_FOCUS)
-            self.window.show_all()
-            if running_sugar:
-                self.parent.show_all()
-                self.running_sugar = True
-
-                # TODO needed?
-                from sugar import profile
-                self.nick = profile.get_nick_name()
-
-                self.macros_path = os.path.join(
-                    get_path(parent, 'data'), _MACROS_SUBPATH)
-            else:
-                # Make sure macros_path is somewhere writable
-                self.macros_path = os.path.join(
-                    os.path.expanduser('~'), 'Activities',
-                    'TurtleArt.activity', _MACROS_SUBPATH)
-            self._setup_events()
-        else:
-            self.interactive_mode = False
-
-        # loading and saving
-        self.load_save_folder = os.path.join(path, 'samples')
-        self.py_load_save_folder = os.path.join(path, 'pysamples')
-        self._py_cache = {}
-        # TODO needed?
-        self.used_block_list = []  # Which blocks has the user used?
-        self.save_folder = None
-        self.save_file_name = None
-
-        # dimensions
-        self.width = gtk.gdk.screen_width()
-        self.height = gtk.gdk.screen_height()
-        self.rect = gtk.gdk.Rectangle(0, 0, 0, 0)
-
-        self.no_help = False
-        self.last_label = None
-        self._autohide_shape = True
-        self.keypress = ''
-        self.keyvalue = 0
-        self._focus_out_id = None
-        self._insert_text_id = None
-        self._text_to_check = False
-        self.mouse_flag = 0
-        self.mouse_x = 0
-        self.mouse_y = 0
-        self.update_counter = 0
-        self.running_blocks = False
-        self.saving_blocks = False
-        self.copying_blocks = False
-        self.sharing_blocks = False
-        self.deleting_blocks = False
-
-        # find out which character to use as decimal point
-        try:
-            locale.setlocale(locale.LC_NUMERIC, '')
-        except locale.Error:
-            debug_output('unsupported locale', self.running_sugar)
-        self.decimal_point = locale.localeconv()['decimal_point']
-        if self.decimal_point == '' or self.decimal_point is None:
-            self.decimal_point = '.'
-
-        # settings that depend on the hardware
-        self.orientation = HORIZONTAL_PALETTE
-        self.hw = get_hardware()
-        self.lead = 1.0
-        if self.hw in (XO1, XO15, XO175, XO4):
-            self.scale = 1.0
-            self.entry_scale = 0.67
-            if self.hw == XO1:
-                self.color_mode = '565'
-            else:
-                self.color_mode = '888'
-            if self.running_sugar and not self.activity.has_toolbarbox:
-                self.orientation = VERTICAL_PALETTE
-        else:
-            self.scale = 1.0
-            self.entry_scale = 1.0
-            self.color_mode = '888'
-        self._set_screen_dpi()
-
-        self.block_scale = BLOCK_SCALE[3]
-        self.trash_scale = 0.5
-        self.myblock = {}
-        self.python_code = None
-        self.nop = 'nop'
-        self.loaded = 0
-        self.step_time = 0
-        self.hide = True
-        self.palette = False
-        self.coord_scale = 1
-        self.buddies = []
-        self._saved_string = ''
-        self._saved_action_name = ''
-        self._saved_box_name = ''
-        self.dx = 0
-        self.dy = 0
-        self.media_shapes = {}
-        self.cartesian = False
-        self.polar = False
-        self.metric = False
-        self.overlay_shapes = {}
-        self.toolbar_shapes = {}
-        self.toolbar_offset = 0
-        self.status_spr = None
-        self.status_shapes = {}
-        self.toolbar_spr = None
-        self.palette_sprs = []
-        self.palettes = []
-        self.palette_button = []
-        self.trash_stack = []
-        self.selected_palette = None
-        self.previous_palette = None
-        self.selectors = []
-        self.selected_selector = None
-        self.previous_selector = None
-        self.selector_shapes = []
-        self.selected_blk = None
-        self.selected_spr = None
-        self.selected_turtle = None
-        self.drag_group = None
-        self.drag_turtle = 'move', 0, 0
-        self.drag_pos = 0, 0
-        self.dragging_canvas = [False, 0, 0]
-        self.turtle_movement_to_share = None
-        self.paste_offset = 20  # Don't paste on top of where you copied.
-
-        # common properties of all blocks (font size, decimal point, ...)
-        self.block_list = Blocks(font_scale_factor=self.scale,
-                                 decimal_point=self.decimal_point)
-        if self.interactive_mode:
-            self.sprite_list = Sprites(self.window)
-        else:
-            self.sprite_list = None
-
-        # canvas object that supports the basic drawing functionality
-        self.canvas = TurtleGraphics(self, self.width, self.height)
-        if self.hw == XO175 and self.canvas.width == 1024:
-            self.hw = XO30
-        if self.interactive_mode:
-            self.sprite_list.set_cairo_context(self.canvas.canvas)
-
-        self.turtles = Turtles(self.sprite_list)
-        if self.nick is None:
-            self.default_turtle_name = DEFAULT_TURTLE
-        else:
-            self.default_turtle_name = self.nick
-        if mycolors is None:
-            Turtle(self.turtles, self.default_turtle_name)
-        else:
-            Turtle(self.turtles, self.default_turtle_name, mycolors.split(','))
-        self.active_turtle = self.turtles.get_turtle(self.default_turtle_name)
-        self.active_turtle.show()
-
-        self.canvas.clearscreen(False)
-
-        self._configure_cb(None)
-
-        self._icon_paths = [os.path.join(self.path, 'icons')]
-
-        # TODO needed?
-        self.lc = LogoCode(self)
-
-        self.turtleart_plugins = []
-        self.saved_pictures = []
-        self.block_operation = ''
-
-        #from tabasics import Palettes
-        #self._basic_palettes = Palettes(self)
-
-        if self.interactive_mode:
-            gobject.idle_add(self._lazy_init, False, False)
-        else:
-            self._init_plugins()
-            self._setup_plugins()
-
-
-
-def get_canvas():
+def get_tw():
     """ Create a GTK window and instantiate a DummyTurtleMain instance. Return
-    the canvas that supports all the drawing functions (a 
-    tacanvas.TurtleGraphics instance).
+    the TurtleArtWindow object that holds the turtles and the canvas.
     """
     # copied from turtleblocks.TurtleMain._setup_gtk()
     
@@ -391,6 +182,6 @@ def get_canvas():
     win.show()
     win.connect('delete_event', gui._quit_ta)
     
-    return gui.tw.canvas
+    return gui.tw
 
 

@@ -3,7 +3,7 @@
 from classes import *
 
 
-canvas = get_canvas()
+tw = get_tw()
 
 BOX = {}
 ACTION = {}
@@ -13,10 +13,12 @@ ACTION = {}
 def start():
     """auto-converted block code (the one that had a 'start' block at the top)
     """
+    turtle = tw.turtles.get_active_turtle()
+    
     # example: draw a square
     for i in range(4):
-        canvas.forward(100)
-        canvas.right(90)
+        turtle.forward(100)
+        turtle.right(90)
 
     # The idea is to handle everything as it is handled when the block code is 
     # executed in TA. That is, translate all blocks to operations on the canvas 
