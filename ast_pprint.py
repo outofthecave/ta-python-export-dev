@@ -42,14 +42,14 @@ def _ast_node_to_string(node, indent=""):
         
     # not an AST
     elif not isinstance(node, ast.AST):
-        return str(node) + linesep
+        return repr(node) + linesep
 
     # AST
     else:
         s.append(type(node).__name__)
         s.append(linesep)
         
-        for key, value in node.__dict__.iteritems():
+        for key, value in sorted(node.__dict__.iteritems()):
             if key not in ("lineno", "col_offset"):
                 s.append(indent)
                 s.append(str(key))
