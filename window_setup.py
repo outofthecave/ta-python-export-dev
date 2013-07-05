@@ -145,8 +145,7 @@ class DummyTurtleMain(object):
         self.tw = TurtleArtWindow(self.canvas, _TA_INSTALLATION_PATH,
                                   turtle_canvas=self.turtle_canvas,
                                   parent=self, running_sugar=False, 
-                                  init_palettes=False, 
-                                  load_toolbar_shapes=False)
+                                  running_turtleart=False)
         
         self.name = name
 
