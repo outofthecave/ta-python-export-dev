@@ -17,6 +17,7 @@ def start():
     """
     turtle = tw.turtles.get_active_turtle()
     canvas = tw.canvas
+    logo = tw.lc
 
     # clean
     # copied from talogo.LogoCode.prim_clear
@@ -47,7 +48,11 @@ def start():
         turtle.set_pen_state(True)
         
         # action ="xo man"
-        ACTION["xo man"]()
+        logo.icall(ACTION["xo man"])
+
+        yield True
+
+    yield True
 ACTION["start"] = start
 
 
@@ -55,6 +60,7 @@ def xo_man():
     """action stack called 'xo man'
     """
     turtle = tw.turtles.get_active_turtle()
+    logo = tw.lc
 
     # set color =(random min=0 max=100)
     turtle.set_color(random.uniform(0, 100))
@@ -63,7 +69,9 @@ def xo_man():
     turtle.set_pen_size(40)
     
     # action ="xo"
-    ACTION["xo"]()
+    logo.icall(ACTION["xo"])
+
+    yield True
     
     # set color =(+ =color =10)
     turtle.set_color(turtle.get_color() + 10)
@@ -72,7 +80,9 @@ def xo_man():
     turtle.set_pen_size(turtle.get_pen_size() - 25)
     
     # action ="xo"
-    ACTION["xo"]()
+    logo.icall(ACTION["xo"])
+
+    yield True
 ACTION["xo man"] = xo_man
 
 
@@ -80,6 +90,7 @@ def xo():
     """action stack called 'xo'
     """
     turtle = tw.turtles.get_active_turtle()
+    logo = tw.lc
 
     # left =45
     turtle.right(-45)
@@ -125,12 +136,15 @@ def xo():
     
     # set pen size =(- =(pen size) =35)
     turtle.set_pen_size(turtle.get_pen_size() - 35)
+
+    yield True
 ACTION["xo"] = xo
 
 
 
 if __name__ == '__main__':
-    start()
+    tw.lc.icall(start)
+    gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
 
 
