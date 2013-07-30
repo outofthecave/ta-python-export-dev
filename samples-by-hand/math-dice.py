@@ -18,23 +18,30 @@ ACTION = {}
 def start():
     """action stack called 'start'
     """
+    logo = tw.lc
+
     # store in box="trials" value=1600
     BOX["trials"] = 1600
     
     # action ="clear bins"
-    ACTION["clear bins"]()
+    logo.icall(ACTION["clear bins"])
+    yield True
     
     # action ="toss dice"
-    ACTION["toss dice"]()
+    logo.icall(ACTION["toss dice"])
+    yield True
     
     # action ="plot results"
-    ACTION["plot results"]()
+    logo.icall(ACTION["plot results"])
+    yield True
 ACTION["start"] = start
 
 
 def clear_bins():
     """action stack called 'clear bins'
     """
+    logo = tw.lc
+
     # store in box="box" value=2
     BOX["box"] = 2
     
@@ -46,12 +53,16 @@ def clear_bins():
         
         # store in box="box" value=(+ =(box ="box") =1)
         BOX["box"] = BOX["box"] + 1
+
+    yield True
 ACTION["clear bins"] = clear_bins
 
 
 def toss_dice():
     """action stack called 'toss dice'
     """
+    logo = tw.lc
+
     # repeat =(box ="trials")
     for i in range(BOX["trials"]):
         
@@ -60,6 +71,8 @@ def toss_dice():
         
         # store in box=(box ="box") value=(+ =(box =(box ="box")) = 1)
         BOX[BOX["box"]] = BOX[BOX["box"]] + 1
+
+    yield True
 ACTION["toss dice"] = toss_dice
 
 
@@ -68,6 +81,7 @@ def plot_results():
     """
     turtle = tw.turtles.get_active_turtle()
     canvas = tw.canvas
+    logo = tw.lc
 
     # clean
     canvas.clearscreen()
@@ -141,12 +155,15 @@ def plot_results():
     
     # pen down
     turtle.set_pen_state(True)
+
+    yield True
 ACTION["plot results"] = plot_results
 
 
 
 if __name__ == '__main__':
-    start()
+    tw.lc.icall(start)
+    gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
 
 
