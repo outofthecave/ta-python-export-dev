@@ -17,6 +17,7 @@ def start():
     """
     turtle = tw.turtles.get_active_turtle()
     canvas = tw.canvas
+    logo = tw.lc
     
     # clear
     # copied from talogo.LogoCode.prim_clear
@@ -46,7 +47,8 @@ def start():
     turtle.set_color(10)
 
     # action =action
-    ACTION["action"]()
+    logo.icall(ACTION["action"])
+    yield True
 ACTION["start"] = start
 
 
@@ -54,6 +56,7 @@ def action():
     """action stack called 'action'
     """
     turtle = tw.turtles.get_active_turtle()
+    logo = tw.lc
     
     # pen down
     turtle.set_pen_state(True)
@@ -62,7 +65,8 @@ def action():
     if BOX["box 1"] > 10:
         # then
         # action ="action_2"
-        ACTION["action_2"]()
+        logo.icall(ACTION["action_2"])
+        yield True
 
     # TODO generate type conversion code when min and max are characters (see tabasics.Palettes._prim_random)
     # store in box="box 2" value=(random min=0 max=2)
@@ -103,6 +107,8 @@ def action():
         
         # back =(/ =(box ="box 1") =2)
         turtle.forward(-BOX["box 1"] / 2)
+
+    yield True
 ACTION["action"] = action
 
 
@@ -110,6 +116,7 @@ def action_2():
     """action stack called 'action_2'
     """
     turtle = tw.turtles.get_active_turtle()
+    logo = tw.lc
     
     # forward =(box ="box 1")
     turtle.forward(BOX["box 1"])
@@ -121,13 +128,15 @@ def action_2():
     turtle.right(30)
     
     # action ="action"
-    ACTION["action"]()
+    logo.icall(ACTION["action"])
+    yield True
     
     # left =60
     turtle.right(-60)
     
     # action ="action"
-    ACTION["action"]()
+    logo.icall(ACTION["action"])
+    yield True
     
     # right =30
     turtle.right(30)
@@ -140,12 +149,15 @@ def action_2():
     
     # back =(box ="box 1")
     turtle.forward(-BOX["box 1"])
+
+    yield True
 ACTION["action_2"] = action_2
 
 
 
 if __name__ == '__main__':
-    start()
+    tw.lc.icall(start)
+    gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
 
 
