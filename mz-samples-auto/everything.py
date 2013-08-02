@@ -16,6 +16,10 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
+    tw.clear_plugins()
+    logo.prim_clear_helper()
+    canvas.clearscreen()
+    turtles.reset_turtles()
     for i in range(logo.int(6.0)):
         turtle.forward(100.0)
         turtle.right(-120.0)
