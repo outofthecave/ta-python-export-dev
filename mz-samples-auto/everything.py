@@ -12,6 +12,7 @@ ACTION = {}
 
 def start():
     turtle = tw.turtles.get_active_turtle()
+    turtles = tw.turtles
     canvas = tw.canvas
     logo = tw.lc
 
@@ -20,17 +21,21 @@ def start():
         turtle.right(-120.0)
         turtle.forward(-100.0)
         turtle.right(60.0)
+        yield True
     turtle.set_xy((0.0, 100.0))
     turtle.set_heading(210.0)
     for i in range(logo.int(2.0)):
         turtle.arc(180.0, 20.0)
+        yield True
+    yield True
 ACTION["start"] = start
 
 
 
 
 if __name__ == '__main__':
-    start()
+    tw.lc.icall(start)
+    gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
 
 

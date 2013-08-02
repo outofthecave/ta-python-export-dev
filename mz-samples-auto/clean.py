@@ -23,13 +23,15 @@ def start():
     turtles.reset_turtles()
     turtle.right(90.0)
     turtle.forward(100.0)
+    yield True
 ACTION["start"] = start
 
 
 
 
 if __name__ == '__main__':
-    start()
+    tw.lc.icall(start)
+    gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
 
 
