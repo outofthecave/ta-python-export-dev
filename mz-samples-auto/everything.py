@@ -20,6 +20,7 @@ def start():
     logo.prim_clear_helper()
     canvas.clearscreen()
     turtles.reset_turtles()
+    canvas.fillscreen_with_gray(15.0, 80.0, 100.0)
     for i in range(logo.int(6.0)):
         turtle.forward(100.0)
         turtle.right(-120.0)
