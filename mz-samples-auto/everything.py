@@ -17,7 +17,6 @@ def start():
     logo = tw.lc
 
     tw.clear_plugins()
-    logo.prim_clear_helper()
     canvas.clearscreen()
     turtles.reset_turtles()
     turtle.set_pen_state(False)
