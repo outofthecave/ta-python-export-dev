@@ -19,6 +19,8 @@ def start():
     turtle.forward(100.0)
     turtle.set_heading(30.0)
     turtle.forward(100.0)
+    turtle.right(turtle.get_heading())
+    turtle.forward(100.0)
     yield True
 ACTION["start"] = start
 
