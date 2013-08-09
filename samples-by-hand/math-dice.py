@@ -5,7 +5,7 @@ import random
 # TODO avoid this
 from TurtleArt.taconstants import DEFAULT_SCALE
 
-from window_setup import *
+from pyexported.window_setup import *
 
 
 tw = get_tw()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from window_setup import *
+from pyexported.window_setup import *
 
 
 tw = get_tw()

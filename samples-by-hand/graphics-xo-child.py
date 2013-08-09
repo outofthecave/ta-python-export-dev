@@ -2,7 +2,7 @@
 
 import random
 
-from window_setup import *
+from pyexported.window_setup import *
 
 
 tw = get_tw()
