@@ -23,6 +23,11 @@ def start():
     turtle.set_gray(turtle.get_color())
     turtle.right(90.0)
     turtle.forward(turtle.get_gray())
+    turtle.set_color(CONSTANTS["white"])
+    turtle.forward(50.0)
+    turtle.set_color(CONSTANTS["yellow"])
+    turtle.right(90.0)
+    turtle.forward(100.0)
     yield True
 ACTION["start"] = start
 
