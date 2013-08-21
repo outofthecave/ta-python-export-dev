@@ -1,0 +1,93 @@
+generate_code(blk, blocks):
+    blk -- top block of the start stack (i.e., 'start' block)
+    blocks -- all blocks of the program ???
+	for every named stack:
+	    stacks[stack_key] = _readline(_blocks_to_code(top block of that stack))
+	return _blocks_to_code('start' block)
+
+_blocks_to_code(blk):
+    blk -- top block of a stack
+    return a list of tuples (primitive name or value of value block or '%nothing%', block number)
+    define scope by inserting '[', ']', etc.
+
+run_blocks(code):
+    code -- output of generate_code(...)
+    _setup_cmd(code)
+
+_setup_cmd(string):
+    string -- output of generate_code(...), not a str instance
+    hide the active turtle
+    step = _start_eval(_readline(string))
+
+_readline(line):
+    line -- output of generate_code(...)
+    turn tuples (primitive name, block number) into tuples (symbol, block number)
+    turn stringified values back into values of the original type
+    turn '[', ']', etc. into embedded lists
+    return the list of all tuples in the original order
+
+_start_eval(blklist):
+    show stop button
+    icall(evline, blklist)
+    hide stop button
+    re-enable hover help
+
+evline(blklist):
+    iline = copy of blklist
+    arglist = None
+    while iline:
+        If the blocks are visible, highlight the current block.
+        In debugging modes, we pause between steps and show the turtle.
+        'Stand-alone' booleans are handled here. ???
+        Process the token and any arguments.
+        icall(_eval)
+        Time to unhighlight the current block.
+    set iline back to its original value
+
+_eval():
+    token = iline.pop(0)
+    if token is a symbol:
+        We highlight blocks here in case an error occurs...
+        icall(_evalsym, token)
+        and unhighlight if everything was OK.
+        ireturn(iresult)
+    else:
+        ireturn(token)
+
+_evalsym(token):
+    cfun = token
+    arglist = []
+    for repeat(token.nargs):
+        icall(_eval)
+        arglist.append(iresult)
+    if cfun.rprim:
+        if isinstance(cfun.fcn, list):
+            # embedded flow of blocks
+            icall(_ufuncall, cfun.fcn)
+        else:
+            icall(cfun.fcn, *arglist)
+        ireturn(None)
+    else:
+        ireturn(cfun.fcn(self, *arglist))
+    set cfun and arglist back to their original value
+
+_ufuncall(body):
+    ijmp(evline, body)
+
+
+
+icall(fcn, *args):
+    PUSH onto the istack
+    istack.append(step)
+    step = fcn(*(args))
+
+ireturn(res):
+    POP from the istack
+    step = istack.pop()
+    iresult = res
+
+ijmp(fcn, *args):
+    advance to next step without changing the istack
+    step = fcn(*(args))
+
+
