@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -18,7 +21,6 @@ def start():
 
     turtle.forward(100.0)
     tw.clear_plugins()
-    logo.prim_clear_helper()
     canvas.clearscreen()
     turtles.reset_turtles()
     turtle.right(90.0)
