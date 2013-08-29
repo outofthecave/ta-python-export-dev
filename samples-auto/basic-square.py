@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -16,7 +19,7 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
-    for i in range(logo.int(4.0)):
+    for i in range(int(4.0)):
         turtle.forward(100.0)
         turtle.right(90.0)
         yield True
