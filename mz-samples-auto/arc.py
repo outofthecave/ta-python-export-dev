@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -16,7 +19,7 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
-    turtle.arc(90.0, 100.0)
+    turtle.arc(float(90.0), float(100.0))
     yield True
 ACTION["start"] = start
 
