@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -23,9 +26,9 @@ def start():
     turtle.set_gray(turtle.get_color())
     turtle.right(90.0)
     turtle.forward(turtle.get_gray())
-    turtle.set_color(CONSTANTS["white"])
+    turtle.set_color(CONSTANTS['white'])
     turtle.forward(50.0)
-    turtle.set_color(CONSTANTS["yellow"])
+    turtle.set_color(CONSTANTS['yellow'])
     turtle.right(90.0)
     turtle.forward(100.0)
     yield True

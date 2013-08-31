@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -17,12 +20,12 @@ def start():
     logo = tw.lc
 
     turtle.start_fill()
-    for i in range(logo.int(2.0)):
+    for i in range(int(2.0)):
         turtle.forward(100.0)
         turtle.right(90.0)
         yield True
     turtle.stop_fill()
-    for i in range(logo.int(2.0)):
+    for i in range(int(2.0)):
         turtle.forward(100.0)
         turtle.right(90.0)
         yield True

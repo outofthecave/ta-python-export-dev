@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -19,8 +22,8 @@ def start():
     turtle.set_color(30.0)
     canvas.fillscreen_with_gray(0.0, 50.0, 0.0)
     turtle.set_pen_size(1.0)
-    for i in range(logo.int(100.0)):
-        for i in range(logo.int(100.0)):
+    for i in range(int(100.0)):
+        for i in range(int(100.0)):
             turtle.set_shade(turtle.get_x() / tw.get_coord_scale())
             turtle.set_gray(turtle.get_y() / tw.get_coord_scale())
             turtle.forward(turtle.get_pen_size())
