@@ -19,11 +19,11 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
-    turtle.forward(float(CONSTANTS["white"]) / 2.0)
+    turtle.forward(int(CONSTANTS['white']) / 2.0)
     turtle.right(90.0)
     turtle.forward(300.0 / 3.0)
     turtle.right(90.0)
-    turtle.forward(3500.0 / float(CONSTANTS["blue"]))
+    turtle.forward(3500.0 / int(CONSTANTS['blue']))
     yield True
 ACTION["start"] = start
 

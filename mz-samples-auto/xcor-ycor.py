@@ -22,9 +22,9 @@ def start():
     turtle.right(90.0)
     turtle.forward(100.0)
     turtle.right((-90.0))
-    turtle.forward(turtle.get_x() / tw.get_coord_scale())
+    turtle.forward(float(turtle.get_x()) / tw.get_coord_scale())
     turtle.right((-90.0))
-    turtle.forward(turtle.get_y() / tw.get_coord_scale())
+    turtle.forward(float(turtle.get_y()) / tw.get_coord_scale())
     yield True
 ACTION["start"] = start
 

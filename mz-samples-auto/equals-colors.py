@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -17,19 +20,19 @@ def start():
     logo = tw.lc
 
     turtle.forward(100.0)
-    if (CONSTANTS["red"] == 50.0):
+    if (int(CONSTANTS['red']) == 50.0):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (CONSTANTS["red"] == 0.0):
+    if (int(CONSTANTS['red']) == 0.0):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (CONSTANTS["red"] == CONSTANTS["black"]):
+    if (CONSTANTS['red'] == CONSTANTS['black']):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (CONSTANTS["black"] == 0.0):
+    if (int(CONSTANTS['black']) == 0.0):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (CONSTANTS["red"] == 'red'):
+    if (CONSTANTS['red'].get_number_string() == u'red'):
         turtle.right(90.0)
     turtle.forward(100.0)
     yield True

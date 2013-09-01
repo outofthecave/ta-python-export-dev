@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -35,7 +38,7 @@ def start():
     if (97.0 == ord(u'a')):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (u'text' == ord(u'e')):
+    if (u'text' == u'e'):
         turtle.right(90.0)
     turtle.forward(100.0)
     yield True
