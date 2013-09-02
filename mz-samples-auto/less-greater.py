@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -29,13 +32,13 @@ def start():
     if (96.0 < ord(u'a')):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (CONSTANTS["red"] < CONSTANTS["blue"]):
+    if (CONSTANTS['red'] < CONSTANTS['blue']):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (CONSTANTS["blue"] > 69.0):
+    if (int(CONSTANTS['blue']) > 69.0):
         turtle.right(90.0)
     turtle.forward(100.0)
-    if (CONSTANTS["blue"] > u'`foo'):
+    if (CONSTANTS['blue'].get_number_string() > u'`foo'):
         turtle.right(90.0)
     turtle.forward(100.0)
     yield True
