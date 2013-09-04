@@ -19,11 +19,11 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
-    turtle.forward(ord('d') + 50.0)
+    turtle.forward(ord(u'd') + 50.0)
     turtle.right(90.0)
-    turtle.forward(ord('n') + ord('('))
+    turtle.forward(ord(u'n') + ord(u'('))
     turtle.right(90.0)
-    turtle.forward(30.0 + ord('x'))
+    turtle.forward(30.0 + ord(u'x'))
     yield True
 ACTION["start"] = start
 
