@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -27,17 +30,17 @@ def start():
     turtle.set_shade(30.0)
     turtle.set_pen_size(6.0)
     turtle.start_fill()
-    for i in range(logo.int(turtle.get_pen_size())):
+    for i in range(int(turtle.get_pen_size())):
         turtle.forward(100.0)
         turtle.right((-120.0))
         turtle.forward((-100.0))
         turtle.right(turtle.get_color())
         yield True
     turtle.stop_fill()
-    turtle.set_xy((0.0, 50.0))
+    turtle.set_xy(0.0, 50.0)
     turtle.set_heading(210.0)
     turtle.set_gray(0.0)
-    for i in range(logo.int(2.0)):
+    for i in range(int(2.0)):
         turtle.arc(180.0, 20.0)
         yield True
     yield True
