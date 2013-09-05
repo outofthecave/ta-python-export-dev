@@ -20,7 +20,7 @@ def start():
     logo = tw.lc
 
     BOX[u'my box_1'] = 0.0
-    while (BOX[u'my box_1'] < 4.0):
+    while (int(BOX[u'my box_1']) < 4.0):
         turtle.forward(100.0)
         turtle.right(90.0)
         BOX[u'my box_1'] = int(BOX[u'my box_1']) + 1.0
