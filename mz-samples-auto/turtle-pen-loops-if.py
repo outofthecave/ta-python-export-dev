@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from math import sqrt
+from random import uniform
+
 from pyexported.window_setup import *
 
 
@@ -18,7 +21,7 @@ def start():
 
     turtle.set_heading(16.0)
     while True:
-        for i in range(logo.int(4.0)):
+        for i in range(int(4.0)):
             turtle.set_gray(turtle.get_color())
             turtle.set_color(turtle.get_heading())
             turtle.right((-turtle.get_shade()))
@@ -33,7 +36,7 @@ def start():
                 turtle.right((-90.0))
                 turtle.forward(100.0)
             yield True
-        turtle.set_xy((turtle.get_y() / tw.get_coord_scale(), turtle.get_x() / tw.get_coord_scale()))
+        turtle.set_xy(float(turtle.get_y()) / tw.get_coord_scale(), float(turtle.get_x()) / tw.get_coord_scale())
         yield True
     yield True
 ACTION["start"] = start

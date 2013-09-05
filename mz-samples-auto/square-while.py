@@ -19,9 +19,11 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
-    while (not (turtle.get_pen_state() and (not turtle.get_pen_state()))):
+    BOX[u'my box_1'] = 0.0
+    while (int(BOX[u'my box_1']) < 4.0):
         turtle.forward(100.0)
         turtle.right(90.0)
+        BOX[u'my box_1'] = int(BOX[u'my box_1']) + 1.0
         yield True
     yield True
 ACTION["start"] = start
