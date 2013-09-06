@@ -20,10 +20,10 @@ def start():
     logo = tw.lc
 
     BOX[u'my box_1'] = 0.0
-    while (not (int(BOX[u'my box_1']) > 3.0)):
+    while (not (float(BOX[u'my box_1']) > 3.0)):
         turtle.forward(100.0)
         turtle.right(90.0)
-        BOX[u'my box_1'] = int(BOX[u'my box_1']) + 1.0
+        BOX[u'my box_1'] = float(BOX[u'my box_1']) + 1.0
         yield True
     yield True
 ACTION["start"] = start
