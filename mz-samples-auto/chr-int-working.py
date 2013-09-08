@@ -22,7 +22,7 @@ def start():
 
     BOX[chr(int(97.0))] = 100.0
     for i in range(int(float(u'4.0e1'))):
-        turtle.forward(int(BOX[u'a']))
+        turtle.forward(convert(BOX[u'a'], TYPE_INT))
         turtle.right(int(CONSTANTS['purple']))
         yield True
     yield True

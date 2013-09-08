@@ -2,6 +2,7 @@
 
 from math import sqrt
 from random import uniform
+from time import sleep
 
 from pyexported.window_setup import *
 
@@ -20,7 +21,7 @@ def start():
     logo = tw.lc
 
     BOX[u'my box_1'] = 4.0
-    for i in range(int(BOX[u'my box_1'])):
+    for i in range(convert(BOX[u'my box_1'], TYPE_INT)):
         turtle.forward(100.0)
         turtle.right(90.0)
         yield True
