@@ -35,9 +35,9 @@ def toss_dice():
     canvas = tw.canvas
     logo = tw.lc
 
-    for i in range(int(BOX[u'trials'])):
+    for i in range(convert(BOX[u'trials'], TYPE_INT)):
         BOX[u'box'] = int(round(uniform(int(1.0), int(6.0)), 0)) + int(round(uniform(int(1.0), int(6.0)), 0))
-        BOX[str(BOX[u'box'])] = float(BOX[str(BOX[u'box'])]) + 1.0
+        BOX[BOX[u'box']] = convert(BOX[BOX[u'box']], TYPE_NUMBER) + 1.0
         yield True
     yield True
 ACTION["toss dice"] = toss_dice
@@ -50,7 +50,7 @@ def clear_bins():
 
     BOX[u'box'] = 2.0
     for i in range(int(11.0)):
-        BOX[str(BOX[u'box'])] = 0.0
+        BOX[BOX[u'box']] = 0.0
         logo.icall(ACTION[u'next bin'])
         yield True
     yield True
@@ -62,7 +62,7 @@ def next_bin():
     canvas = tw.canvas
     logo = tw.lc
 
-    BOX[u'box'] = float(BOX[u'box']) + 1.0
+    BOX[u'box'] = convert(BOX[u'box'], TYPE_NUMBER) + 1.0
     yield True
 ACTION["next bin"] = next_bin
 
@@ -94,7 +94,7 @@ def bar_graph():
     logo = tw.lc
 
     turtle.set_pen_state(False)
-    turtle.set_xy(50.0 * float(BOX[u'box']) - 6.0, 0.0)
+    turtle.set_xy(50.0 * convert(BOX[u'box'], TYPE_NUMBER) - 6.0, 0.0)
     turtle.forward((-100.0))
     turtle.forward(100.0)
     turtle.set_pen_state(True)
@@ -108,10 +108,10 @@ def bar():
     canvas = tw.canvas
     logo = tw.lc
 
-    turtle.set_color(float(BOX[u'box']) * 10.0)
+    turtle.set_color(convert(BOX[u'box'], TYPE_NUMBER) * 10.0)
     turtle.start_fill()
     for i in range(int(2.0)):
-        turtle.forward(float(BOX[str(BOX[u'box'])]))
+        turtle.forward(convert(BOX[BOX[u'box']], TYPE_NUMBER))
         turtle.right(90.0)
         turtle.forward(40.0)
         turtle.right(90.0)
