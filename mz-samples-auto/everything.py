@@ -2,6 +2,7 @@
 
 from math import sqrt
 from random import uniform
+from time import (sleep, time)
 
 from pyexported.window_setup import *
 
@@ -20,6 +21,11 @@ def start():
     logo = tw.lc
 
     tw.clear_plugins()
+    logo.stop_playing_media()
+    logo.reset_scale()
+    logo.reset_timer()
+    logo.clear_value_blocks()
+    logo.reset_internals()
     canvas.clearscreen()
     turtles.reset_turtles()
     turtle.set_pen_state(False)
@@ -50,6 +56,7 @@ ACTION["start"] = start
 
 
 if __name__ == '__main__':
+    tw.lc.start_time = time()
     tw.lc.icall(start)
     gobject.idle_add(tw.lc.doevalstep)
     gtk.main()

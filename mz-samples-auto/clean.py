@@ -2,6 +2,7 @@
 
 from math import sqrt
 from random import uniform
+from time import sleep
 
 from pyexported.window_setup import *
 
@@ -21,6 +22,11 @@ def start():
 
     turtle.forward(100.0)
     tw.clear_plugins()
+    logo.stop_playing_media()
+    logo.reset_scale()
+    logo.reset_timer()
+    logo.clear_value_blocks()
+    logo.reset_internals()
     canvas.clearscreen()
     turtles.reset_turtles()
     turtle.right(90.0)
