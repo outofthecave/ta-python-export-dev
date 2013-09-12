@@ -11,7 +11,6 @@ tw = get_tw()
 
 BOX = {}
 ACTION = {}
-heap = []
 
 
 
@@ -21,7 +20,7 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
-    logo.show(heap.pop(), True)
+    logo.show(logo.heap.pop(), True)
     yield True
 ACTION["start"] = start
 

@@ -11,7 +11,6 @@ tw = get_tw()
 
 BOX = {}
 ACTION = {}
-heap = []
 
 
 
@@ -23,12 +22,12 @@ def start():
 
     BOX[u'i'] = 0.0
     for i in range(int(4.0)):
-        heap.append(BOX[u'i'])
+        logo.heap.append(BOX[u'i'])
         BOX[u'i'] = convert(BOX[u'i'], TYPE_NUMBER) + 1.0
         yield True
     turtle.set_pen_state(False)
-    while (not (not heap)):
-        logo.show(heap.pop(), True)
+    while (not (not logo.heap)):
+        logo.show(logo.heap.pop(), True)
         turtle.forward((-50.0))
         yield True
     yield True
