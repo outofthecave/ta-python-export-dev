@@ -1,0 +1,9 @@
+[[0, ["start", 2.0], 195, 195, [null, 1]],
+[1, "show", 195, 241, [0, 2, 7]],
+[2, ["journal", "/bigrepos/sugar-labs/turtleart/samples/images/Pythagoras.jpg"], 253, 241, [1, null]],
+[3, "show", 195, 367, [5, 4, null]],
+[4, ["string", "Pythagoras"], 253, 367, [3, null]],
+[5, "back", 195, 325, [7, 6, 3]],
+[6, ["number", 200.0], 253, 325, [5, null]],
+[7, "penup", 195, 283, [1, 5]],
+[-1, ["turtle", "Yertle"], 0.0, 0.0, 0.0, 0, 50, 5]]
