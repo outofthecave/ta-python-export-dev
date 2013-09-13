@@ -2,7 +2,7 @@
 
 from math import sqrt
 from random import uniform
-from time import sleep
+from time import (sleep, time)
 
 from pyexported.window_setup import *
 
@@ -11,7 +11,6 @@ tw = get_tw()
 
 BOX = {}
 ACTION = {}
-
 
 
 def start():
@@ -23,7 +22,7 @@ def start():
     BOX[u'my box_1'] = 0.0
     while True:
         if (convert(BOX[u'my box_1'], TYPE_NUMBER) > 3.0):
-            return 
+            return
         turtle.forward(100.0)
         turtle.right(90.0)
         BOX[u'my box_1'] = convert(BOX[u'my box_1'], TYPE_NUMBER) + 1.0
@@ -32,11 +31,8 @@ def start():
 ACTION["start"] = start
 
 
-
-
 if __name__ == '__main__':
+    tw.lc.start_time = time()
     tw.lc.icall(start)
     gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
-
-

@@ -2,6 +2,7 @@
 
 from math import sqrt
 from random import uniform
+from time import (sleep, time)
 
 from pyexported.window_setup import *
 
@@ -10,7 +11,6 @@ tw = get_tw()
 
 BOX = {}
 ACTION = {}
-
 
 
 def start():
@@ -28,11 +28,8 @@ def start():
 ACTION["start"] = start
 
 
-
-
 if __name__ == '__main__':
+    tw.lc.start_time = time()
     tw.lc.icall(start)
     gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
-
-
