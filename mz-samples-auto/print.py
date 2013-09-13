@@ -21,15 +21,19 @@ def start():
     logo = tw.lc
 
     tw.print_(100.0, False)
+    print 100.0
     sleep(1.0)
     yield True
     tw.print_(CONSTANTS['leftpos'], False)
+    print CONSTANTS['leftpos']
     sleep(1.0)
     yield True
     tw.print_(u'text', False)
+    print u'text'
     sleep(1.0)
     yield True
     tw.print_(CONSTANTS['red'], False)
+    print CONSTANTS['red']
     yield True
 ACTION["start"] = start
 
