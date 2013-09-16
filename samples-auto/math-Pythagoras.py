@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from math import sqrt
+from time import *
 from random import uniform
-from time import (sleep, time)
+from math import *
 
 from pyexported.window_setup import *
 
@@ -11,7 +11,6 @@ tw = get_tw()
 
 BOX = {}
 ACTION = {}
-
 
 
 def draw_b():
@@ -59,6 +58,7 @@ def draw_h():
 
     turtle.arc(360.0, convert(BOX[u'radius'], TYPE_NUMBER))
     tw.print_(BOX[u'angle'], False)
+    print BOX[u'angle']
     turtle.right(90.0)
     turtle.forward(convert(BOX[u'radius'], TYPE_NUMBER))
     logo.show(u'h', True)
@@ -78,7 +78,7 @@ def find_a():
         turtle.arc(180.0, convert(BOX[u'radius'], TYPE_NUMBER))
         if (float(turtle.get_y()) / tw.get_coord_scale() > 0.0):
             turtle.set_shade(50.0)
-            return 
+            return
         turtle.set_pen_state(False)
         BOX[u'angle'] = convert(BOX[u'angle'], TYPE_NUMBER) + 1.0
         turtle.arc(180.0, convert(BOX[u'radius'], TYPE_NUMBER))
@@ -89,6 +89,7 @@ def find_a():
 ACTION["find a"] = find_a
 
 def start():
+    tw.start_plugins()
     turtle = tw.turtles.get_active_turtle()
     turtles = tw.turtles
     canvas = tw.canvas
@@ -127,12 +128,8 @@ def start():
 ACTION["start"] = start
 
 
-
-
 if __name__ == '__main__':
     tw.lc.start_time = time()
     tw.lc.icall(start)
     gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
-
-
