@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from math import sqrt
+from time import *
 from random import uniform
+from math import *
 
 from pyexported.window_setup import *
 
@@ -12,8 +13,8 @@ BOX = {}
 ACTION = {}
 
 
-
 def start():
+    tw.start_plugins()
     turtle = tw.turtles.get_active_turtle()
     turtles = tw.turtles
     canvas = tw.canvas
@@ -24,8 +25,8 @@ def start():
     turtle.set_pen_size(1.0)
     for i in range(int(100.0)):
         for i in range(int(100.0)):
-            turtle.set_shade(turtle.get_x() / tw.get_coord_scale())
-            turtle.set_gray(turtle.get_y() / tw.get_coord_scale())
+            turtle.set_shade(float(turtle.get_x()) / tw.get_coord_scale())
+            turtle.set_gray(float(turtle.get_y()) / tw.get_coord_scale())
             turtle.forward(turtle.get_pen_size())
             yield True
         turtle.set_pen_state(False)
@@ -39,11 +40,8 @@ def start():
 ACTION["start"] = start
 
 
-
-
 if __name__ == '__main__':
+    tw.lc.start_time = time()
     tw.lc.icall(start)
     gobject.idle_add(tw.lc.doevalstep)
     gtk.main()
-
-

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from math import sqrt
+from time import *
 from random import uniform
-from time import (sleep, time)
+from math import *
 
 from pyexported.window_setup import *
 
@@ -14,6 +14,7 @@ ACTION = {}
 
 
 def start():
+    tw.start_plugins()
     turtle = tw.turtles.get_active_turtle()
     turtles = tw.turtles
     canvas = tw.canvas

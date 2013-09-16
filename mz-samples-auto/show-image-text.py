@@ -14,6 +14,7 @@ ACTION = {}
 
 
 def start():
+    tw.start_plugins()
     turtle = tw.turtles.get_active_turtle()
     turtles = tw.turtles
     canvas = tw.canvas
