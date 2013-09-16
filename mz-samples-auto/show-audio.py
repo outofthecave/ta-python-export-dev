@@ -19,10 +19,7 @@ def start():
     canvas = tw.canvas
     logo = tw.lc
 
-    logo.show(Media('media', u'/bigrepos/sugar-labs/turtleart/samples/images/Pythagoras.jpg'), True)
-    turtle.set_pen_state(False)
-    turtle.forward((-200.0))
-    logo.show(u'Pythagoras', True)
+    logo.show(Media('audio', u'/bigrepos/material/sound/positive/Plop.wav'), True)
     yield True
 ACTION["start"] = start
 
